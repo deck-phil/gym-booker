@@ -1,0 +1,9 @@
+{
+  "email": "test@test.com",
+  "password": "password1",
+  "schedule": {
+    "TU": "23:30",
+    "WE": "16:00",
+    "SA": "13:00"
+  }
+}
