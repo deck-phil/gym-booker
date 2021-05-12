@@ -20,7 +20,7 @@ def is_time_for_now(current_datetime, time_str):
     current_time = current_datetime
     end_booking_time = current_datetime + timedelta(hours=1)
     booking_time = datetime.combine(current_datetime.date(), datetime.strptime(time_str, '%H:%M').time())
-    return current_time < booking_time < end_booking_time
+    return True or current_time < booking_time < end_booking_time
 
 
 # Returns the Date and Time for booking if it's for today else False
@@ -31,7 +31,7 @@ def is_booking_for_today(schedule):
             time_for_booking = schedule.get(date, None)
             if is_time_for_now(current_datetime, time_for_booking):
                 booking_date = current_datetime.strftime(BOOKING_DATE_FORMAT)
-                booking_time = datetime.strptime(time_for_booking, '%H:%M').strftime(BOOKING_TIME_FORMAT)
+                booking_time = datetime.strptime(time_for_booking, '%H:%M').strftime(BOOKING_TIME_FORMAT).lstrip('0')
                 return booking_date, booking_time
 
     return False, False

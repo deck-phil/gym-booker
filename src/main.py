@@ -1,11 +1,11 @@
-from src.config import CHROME_DRIVER_PATH, GYM_MANAGER_URL, START_HEADLESS, PAGE_TIMEOUT
+from src.config import CHROME_DRIVER_PATH, GYM_MANAGER_URL, START_HEADLESS, PAGE_TIMEOUT, DEBUG_NO_BOOKING
 from src.local_db import LocalDB
 from src.utils import is_booking_for_today
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 
 class GymBooker:
@@ -30,6 +30,24 @@ class GymBooker:
             print(slot.text + '\n')
 
         return slots and [i.text for i in slots] or []
+
+    def check_and_select_time_slot(self, time_str):
+        driver = self.driver
+
+        data_attribute_name = 'at %s' % time_str
+        print('Searching for booking %s' % data_attribute_name)
+        css_selector = '.time-slot[data-slottime="%s"]' % data_attribute_name
+        try:
+            time_select_button = driver.find_element_by_css_selector(css_selector)
+        except NoSuchElementException as e:
+            raise Exception('%s Booking time not found.' % time_str)
+        webdriver.ActionChains(driver).click(time_select_button).perform()
+        WebDriverWait(driver, timeout=PAGE_TIMEOUT).until(
+            lambda d: d.find_element_by_css_selector('div#modal_booking.in'))
+        yes_button = driver.find_element_by_id('dialog_book_yes')
+        if not DEBUG_NO_BOOKING:
+            webdriver.ActionChains(driver).click(yes_button).perform()
+        print('Booked for %s' % time_str)
 
     def select_booking_date(self, date):
         driver = self.driver
@@ -71,8 +89,8 @@ class GymBooker:
         print('Starting Script...')
         for user in self.db.list_users():
             schedule = {
-                "TU": "23:30",
-                "WE": "16:00",
+                "TU": "14:00",
+                "TH": "21:00",
                 "SA": "13:00"
             }
             booking_date, booking_time = is_booking_for_today(schedule)
@@ -84,6 +102,7 @@ class GymBooker:
                     if len(current_bookings) > 1:
                         raise Exception('Cannot book additional session.')
                     self.select_booking_date(booking_date)
+                    self.check_and_select_time_slot(booking_time)
                 except Exception as e:
                     print('Error: %s' % e)
                     print('Error: Continuing to next user...')
