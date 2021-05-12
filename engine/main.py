@@ -1,6 +1,6 @@
-from src.config import CHROME_DRIVER_PATH, GYM_MANAGER_URL, START_HEADLESS, PAGE_TIMEOUT, DEBUG_NO_BOOKING
-from src.local_db import LocalDB
-from src.utils import is_booking_for_today
+from engine.config import CHROME_DRIVER_PATH, GYM_MANAGER_URL, START_HEADLESS, PAGE_TIMEOUT, DEBUG_NO_BOOKING
+from data.local_db import LocalDB
+from engine.utils import is_booking_for_today
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options

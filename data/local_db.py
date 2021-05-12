@@ -1,19 +1,6 @@
 from pymongo import MongoClient
-
-
-class User:
-    email = ''
-    password = ''
-
-    def __init__(self, data):
-        self.email = data.get('email', '')
-        self.password = data.get('password', '')
-
-    def to_dict(self):
-        return {
-            'email': self.email,
-            'password': self.password
-        }
+from bson import ObjectId
+from data.model.user import User
 
 
 class LocalDB:
@@ -27,8 +14,17 @@ class LocalDB:
         self.db = self.client.gym_manager
         self.users = self.db.users
 
+    def get_user(self, **kwargs):
+        user = self.users.find_one(kwargs)
+        return user and User(user)
+
+    def get_user_by_id(self, user_id):
+        user = self.users.find_one(ObjectId(user_id))
+        return user and User(user)
+
     def create_user(self, user):
-        self.users.insert_one(user.to_dict())
+        new_user = self.users.insert_one(user.to_dict())
+        return new_user
 
     def list_users(self):
         users = self.users.find()
