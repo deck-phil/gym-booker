@@ -85,6 +85,13 @@ class GymBooker:
             raise Exception('Cannot log in!')
         print('Log in success!')
 
+    def check_if_open(self):
+        driver = self.driver
+
+        closed_message = driver.find_element_by_css_selector('div.content-box')
+        if closed_message and closed_message.text and closed_message.text.startswith('Your club is closed'):
+            raise Exception('Club closed')
+
     def start_script(self):
         print('Starting Script...')
         for user in self.db.list_users():
@@ -98,6 +105,7 @@ class GymBooker:
                 try:
                     print('Starting %s' % user.email)
                     self.login(user.email, user.password)
+                    self.check_if_open()
                     current_bookings = self.list_current_bookings()
                     if len(current_bookings) > 1:
                         raise Exception('Cannot book additional session.')
