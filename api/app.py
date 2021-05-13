@@ -27,11 +27,13 @@ def check_valid_login():
 
 
 from api.handler.login_handler import LoginHandler
+from api.handler.logout_handler import LogoutHandler
 from api.handler.create_user_handler import CreateUserHandler
 from api.handler.profile_handler import ProfileHandler
 
 rules = [
     ['/login', 'login_handler', LoginHandler, ['POST']],
+    ['/logout', 'logout_handler', LogoutHandler, ['GET', 'POST']],
     ['/create-user', 'create_user_handler', CreateUserHandler, ['POST']],
     ['/profile', 'profile_handler', ProfileHandler, ['GET']]
 ]

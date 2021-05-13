@@ -26,8 +26,12 @@ class User(UserMixin):
         return result
 
     def to_dict(self):
+        return self.to_dict() + {
+            'password': self.password
+        }
+
+    def to_api_dict(self):
         return {
             'email': self.email,
-            'password': self.password,
             'schedule': self.schedule,
         }
