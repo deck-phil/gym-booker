@@ -1,5 +1,5 @@
 from engine.config import CHROME_DRIVER_PATH, GYM_MANAGER_URL, START_HEADLESS, PAGE_TIMEOUT, DEBUG_NO_BOOKING
-from data.local_db import LocalDB
+from data.local_db import DataService
 from engine.utils import is_booking_for_today
 
 from selenium import webdriver
@@ -128,7 +128,7 @@ class GymBooker:
             chrome_options.add_argument('--disable-extensions')
 
         print('Starting Database...')
-        self.db = LocalDB()
+        self.db = DataService()
 
         print('Starting WebDriver...')
         self.driver = webdriver.Chrome(CHROME_DRIVER_PATH, options=chrome_options)

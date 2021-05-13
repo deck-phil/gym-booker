@@ -7,25 +7,29 @@ class LocalDB:
     client = None
     db = None
 
-    users = None
+    user = None
 
     def __init__(self):
         self.client = MongoClient()
         self.db = self.client.gym_manager
-        self.users = self.db.users
+        self.user = self.db.user
 
-    def get_user(self, **kwargs):
-        user = self.users.find_one(kwargs)
+
+class DataService:
+    local_db = LocalDB()
+
+    def get_user(self,**kwargs):
+        user = self.local_db.user.find_one(kwargs)
         return user and User(user)
 
     def get_user_by_id(self, user_id):
-        user = self.users.find_one(ObjectId(user_id))
+        user = self.local_db.user.find_one(ObjectId(user_id))
         return user and User(user)
 
     def create_user(self, user):
-        new_user = self.users.insert_one(user.to_dict())
+        new_user = self.local_db.user.insert_one(user.to_dict())
         return new_user
 
     def list_users(self):
-        users = self.users.find()
+        users = self.local_db.user.find()
         return users and [User(i) for i in users] or []

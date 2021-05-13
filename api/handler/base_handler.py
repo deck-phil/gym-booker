@@ -1,14 +1,14 @@
 import json
 from flask.views import MethodView
 from flask import Response
-from data.local_db import LocalDB
+from data.local_db import DataService
 
 
 class BaseHandler(MethodView):
 
     @property
-    def local_db(self):
-        return LocalDB()
+    def data_service(self):
+        return DataService()
 
     def error_response(self, message=None, status=500):
         return self.json_response({

@@ -2,14 +2,16 @@ from flask_login import UserMixin
 
 
 class User(UserMixin):
-    user_id = None
+    user_id = ''
     email = ''
     password = ''
+    schedule = []
 
     def __init__(self, data):
         self.email = data.get('email', '')
         self.password = data.get('password', '')
         self.user_id = str(data.get('_id', ''))
+        self.schedule = data.get('schedule', [])
 
     def get_id(self):
         return self.user_id
@@ -26,5 +28,6 @@ class User(UserMixin):
     def to_dict(self):
         return {
             'email': self.email,
-            'password': self.password
+            'password': self.password,
+            'schedule': self.schedule,
         }

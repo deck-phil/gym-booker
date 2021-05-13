@@ -8,10 +8,10 @@ from api.access_decorators import public_endpoint
 class LoginHandler(BaseHandler):
 
     def post(self):
-        username = request.form.get('username')
+        email = request.form.get('email')
         password = request.form.get('password', '').encode('utf-8')
 
-        user = self.local_db.get_user(user_name=username)
+        user = self.data_service.get_user(email=email)
 
         if not user or not user.check_password(password):
             return self.error_response('Wrong username or password.')

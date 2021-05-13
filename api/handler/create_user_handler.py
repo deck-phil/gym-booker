@@ -1,6 +1,7 @@
 from flask import request
 from api.handler.base_handler import BaseHandler
 from data.local_db import User
+from pymongo.errors import DuplicateKeyError
 
 
 class CreateUserHandler(BaseHandler):
@@ -11,9 +12,12 @@ class CreateUserHandler(BaseHandler):
         })
         new_user.set_password(request.form.get('password'))
 
-        result = self.local_db.create_user(new_user)
-        message = 'User created successfully!' if result else 'Error. Could not create user.'
+        try:
+            result = self.data_service.create_user(new_user)
+        except DuplicateKeyError as e:
+            return self.error_response('Email already taken')
+
         return self.json_response({
-            'success': result,
-            'message': message
+            'success': True,
+            'message': 'User created successfully!'
         })

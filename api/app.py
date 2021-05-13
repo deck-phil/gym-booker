@@ -1,11 +1,11 @@
 from flask import Flask, request, Response
 from flask_login import LoginManager, current_user
 from flask_bcrypt import Bcrypt
-from data.local_db import LocalDB
+from data.local_db import DataService
 
 
 login_manager = LoginManager()
-local_db = LocalDB()
+data_service = DataService()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '[xGH34v@2jk6dA1we5e*3TUY$f0efV)^b6/;'
@@ -16,13 +16,13 @@ bcrypt = Bcrypt(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    return local_db.get_user_by_id(user_id)
+    return data_service.get_user_by_id(user_id)
 
 
 @app.before_request
 def check_valid_login():
     is_public = getattr(app.view_functions[request.endpoint].view_class, 'is_public', False)
-    if request.endpoint and not current_user.is_authenticated and not is_public:
+    if not is_public and request.endpoint and not current_user.is_authenticated:
         return Response({'Unauthorized'}, status=401, mimetype='application/json')
 
 
