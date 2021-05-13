@@ -21,9 +21,14 @@ def load_user(user_id):
 
 @app.before_request
 def check_valid_login():
-    is_public = getattr(app.view_functions[request.endpoint].view_class, 'is_public', False)
-    if not is_public and request.endpoint and not current_user.is_authenticated:
-        return Response({'Unauthorized'}, status=401, mimetype='application/json')
+    if request.endpoint and 'static' not in request.endpoint:
+        view_function = app.view_functions[request.endpoint]
+        is_public_endpoint = getattr(view_function.view_class, 'is_public', False)
+        is_admin_endpoint = getattr(view_function.view_class, 'is_admin', False)
+
+        if (not current_user.is_authenticated and not is_public_endpoint) \
+                or (is_admin_endpoint and not current_user.is_admin):
+            return Response({'Unauthorized'}, status=401, mimetype='application/json')
 
 
 from api.handler.login_handler import LoginHandler

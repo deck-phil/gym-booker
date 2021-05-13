@@ -3,12 +3,14 @@ from flask_login import UserMixin
 
 class User(UserMixin):
     user_id = ''
+    is_admin = False
     email = ''
     password = ''
     schedule = []
 
     def __init__(self, data):
         self.email = data.get('email', '')
+        self.is_admin = data.get('is_admin', False)
         self.password = data.get('password', '')
         self.user_id = str(data.get('_id', ''))
         self.schedule = data.get('schedule', [])
@@ -33,5 +35,6 @@ class User(UserMixin):
     def to_api_dict(self):
         return {
             'email': self.email,
+            'is_admin': self.is_admin,
             'schedule': self.schedule,
         }

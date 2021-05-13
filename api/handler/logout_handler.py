@@ -13,7 +13,4 @@ class LogoutHandler(BaseHandler):
         })
 
     def post(self):
-        logout_user()
-        return self.json_response({
-            'status': 'logged_out'
-        })
+        return self.get()

@@ -18,7 +18,7 @@ class LocalDB:
 class DataService:
     local_db = LocalDB()
 
-    def get_user(self,**kwargs):
+    def get_user(self, **kwargs):
         user = self.local_db.user.find_one(kwargs)
         return user and User(user)
 
