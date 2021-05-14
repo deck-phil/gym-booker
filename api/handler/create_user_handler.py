@@ -20,6 +20,5 @@ class CreateUserHandler(BaseHandler):
             return self.error_response('Email already taken')
 
         return self.json_response({
-            'success': True,
-            'message': 'User created successfully!'
+            'status': 'user_created'
         })

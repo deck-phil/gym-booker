@@ -35,12 +35,14 @@ from api.handler.login_handler import LoginHandler
 from api.handler.logout_handler import LogoutHandler
 from api.handler.create_user_handler import CreateUserHandler
 from api.handler.profile_handler import ProfileHandler
+from api.handler.list_home_gym_handler import ListHomeGymHandler
 
 rules = [
     ['/login', 'login_handler', LoginHandler, ['POST']],
     ['/logout', 'logout_handler', LogoutHandler, ['GET', 'POST']],
     ['/create-user', 'create_user_handler', CreateUserHandler, ['POST']],
-    ['/profile', 'profile_handler', ProfileHandler, ['GET']]
+    ['/profile', 'profile_handler', ProfileHandler, ['GET', 'POST']],
+    ['/list-home-gyms', 'list_home_gym_handler', ListHomeGymHandler, ['GET']]
 ]
 
 for rule in rules:

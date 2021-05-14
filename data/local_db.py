@@ -30,6 +30,19 @@ class DataService:
         new_user = self.local_db.user.insert_one(user.to_dict())
         return new_user
 
+    def change_user(self, user):
+        self.local_db.user.update_one({
+            '_id': ObjectId(user.user_id)
+        }, {
+            '$set': user.to_dict()
+        })
+
     def list_users(self):
         users = self.local_db.user.find()
         return users and [User(i) for i in users] or []
+
+    def list_home_gyms(self):
+        return {
+            'ottawa_gloucester': 'Ottawa Gloucester',
+            'kanata_bridlewood': 'Kanata Bridlewood',
+        }

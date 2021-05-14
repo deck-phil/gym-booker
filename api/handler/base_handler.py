@@ -12,7 +12,7 @@ class BaseHandler(MethodView):
 
     def error_response(self, message=None, status=500):
         return self.json_response({
-            'success': False,
+            'status': 'error',
             'message': message or 'No message provided.'
         }, status=status)
 
