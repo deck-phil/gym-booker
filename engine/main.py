@@ -85,6 +85,8 @@ class GymBooker:
             raise Exception('Cannot log in!')
         print('Log in success!')
 
+        return True
+
     def check_if_open(self):
         driver = self.driver
 
@@ -92,8 +94,8 @@ class GymBooker:
         if closed_message and closed_message.text and closed_message.text.startswith('Your club is closed'):
             raise Exception('Club closed')
 
-    def start_script(self):
-        print('Starting Script...')
+    def start_booking_script(self):
+        print('Starting Booking Script...')
         for user in self.db.list_users():
             schedule = {
                 "TU": "14:00",
@@ -118,7 +120,17 @@ class GymBooker:
             else:
                 print('Not time for booking.')
 
-    def init(self):
+    def start_test_script(self, **kwargs):
+        print('Starting Test Script...')
+        user_id = 'user_id' in kwargs and kwargs['user_id']
+        user = self.db.get_user_by_id(user_id)
+        try:
+            return self.login(user.email, user.ue_fit4less_password)
+        except Exception as e:
+            print('Could not login')
+            return False
+
+    def run_script(self, script_name, **kwargs):
         chrome_options = Options()
 
         if START_HEADLESS:
@@ -134,13 +146,18 @@ class GymBooker:
         self.driver = webdriver.Chrome(CHROME_DRIVER_PATH, options=chrome_options)
         self.driver.set_window_size(1920, 1080)
 
-        self.start_script()
+        if script_name == 'test_script':
+            result = self.start_test_script(**kwargs)
+        else:
+            result = self.start_booking_script()
 
         print('Closing Application.')
         self.driver.quit()
 
+        return result
+
 
 if __name__ == '__main__':
-    GymBooker().init()
+    GymBooker().run_script('booking_script')
 
 

@@ -1,4 +1,5 @@
 from flask_login import UserMixin
+from api.encryption import AESCipher
 
 
 class User(UserMixin):
@@ -22,17 +23,20 @@ class User(UserMixin):
     def get_id(self):
         return self.user_id
 
-    def set_password(self, value, field_name='password'):
+    def set_password(self, value):
         from api.app import bcrypt
-        if field_name == 'password':
-            self.password = bcrypt.generate_password_hash(value).decode('utf - 8')
-        elif field_name == 'fit4less_password':
-            self.fit4less_password = bcrypt.generate_password_hash(value).decode('utf - 8')
+        self.password = bcrypt.generate_password_hash(value).decode('utf - 8')
 
     def check_password(self, value):
         from api.app import bcrypt
-        result = bcrypt.check_password_hash(self.password, value)
-        return result
+        return bcrypt.check_password_hash(self.password, value)
+
+    def set_fit4less_password(self, value):
+        self.fit4less_password = AESCipher.encrypt_string(value)
+
+    @property
+    def ue_fit4less_password(self):
+        return str(AESCipher.decrypt_string(self.fit4less_password))
 
     def to_dict(self):
         return {

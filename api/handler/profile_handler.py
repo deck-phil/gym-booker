@@ -22,7 +22,7 @@ class ProfileHandler(BaseHandler):
         user.home_gym = request_home_gym
 
         if request_fit4less_password:
-            user.set_password(request_fit4less_password, field_name='fit4less_password')
+            user.set_fit4less_password(request_fit4less_password)
 
         self.data_service.change_user(user)
 

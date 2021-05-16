@@ -2,13 +2,14 @@ from flask import Flask, request, Response
 from flask_login import LoginManager, current_user
 from flask_bcrypt import Bcrypt
 from data.local_db import DataService
+from api.encryption import SECRET_KEY
 
 
 login_manager = LoginManager()
 data_service = DataService()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '[xGH34v@2jk6dA1we5e*3TUY$f0efV)^b6/;'
+app.config['SECRET_KEY'] = SECRET_KEY
 
 login_manager.init_app(app)
 bcrypt = Bcrypt(app)
@@ -36,13 +37,15 @@ from api.handler.logout_handler import LogoutHandler
 from api.handler.create_user_handler import CreateUserHandler
 from api.handler.profile_handler import ProfileHandler
 from api.handler.list_home_gym_handler import ListHomeGymHandler
+from api.handler.test_credentials_handler import TestCredentialsHandler
 
 rules = [
     ['/login', 'login_handler', LoginHandler, ['POST']],
     ['/logout', 'logout_handler', LogoutHandler, ['GET', 'POST']],
     ['/create-user', 'create_user_handler', CreateUserHandler, ['POST']],
     ['/profile', 'profile_handler', ProfileHandler, ['GET', 'POST']],
-    ['/list-home-gyms', 'list_home_gym_handler', ListHomeGymHandler, ['GET']]
+    ['/list-home-gyms', 'list_home_gym_handler', ListHomeGymHandler, ['GET']],
+    ['/test-credentials', 'test_credentials_handler', TestCredentialsHandler, ['GET']]
 ]
 
 for rule in rules:
