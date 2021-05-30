@@ -2,10 +2,10 @@ from flask import request
 from api.handler.base_handler import BaseHandler
 from data.local_db import User
 from pymongo.errors import DuplicateKeyError
-from api.access_decorators import admin_endpoint
+from api.access_decorators import public_endpoint
 
 
-@admin_endpoint
+@public_endpoint
 class CreateUserHandler(BaseHandler):
 
     def post(self):
