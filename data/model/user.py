@@ -53,5 +53,5 @@ class User(UserMixin):
             'email': self.email,
             'is_admin': self.is_admin,
             'home_gym': self.home_gym,
-            'schedule': self.schedule,
+            'schedule': self.schedule.to_dict(),
         }

@@ -32,3 +32,6 @@ class UserSchedule:
 
             _date_idx += timedelta(days=1)
         return booking_events
+
+    def to_dict(self):
+        return self.schedule
