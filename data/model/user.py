@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from api.encryption import AESCipher
+from data.model.user_schedule import UserSchedule
 
 
 class User(UserMixin):
@@ -18,7 +19,7 @@ class User(UserMixin):
         self.password = data.get('password', '')
         self.fit4less_password = data.get('fit4less_password', '')
         self.home_gym = data.get('home_gym', '')
-        self.schedule = data.get('schedule', [])
+        self.schedule = UserSchedule(data.get('schedule', {}))
 
     def get_id(self):
         return self.user_id

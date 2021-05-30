@@ -7,3 +7,12 @@
     "SA": "13:00"
   }
 }
+
+{
+  'user_id': ObjectId(),
+  'event_datetime': '20/05/2021',,
+  'weekday': 'TH',
+  'time': '13:00',
+  'home_gym': 'ottawa_gloucester',
+  'status_id': 0
+}

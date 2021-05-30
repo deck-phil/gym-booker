@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 from bson import ObjectId
 from data.model.user import User
+from data.model.booking_event import BookingEvent
 
 
 class LocalDB:
@@ -8,11 +9,13 @@ class LocalDB:
     db = None
 
     user = None
+    booking_event = None
 
     def __init__(self):
         self.client = MongoClient()
         self.db = self.client.gym_manager
         self.user = self.db.user
+        self.booking_event = self.db.booking_event
 
 
 class DataService:
@@ -46,3 +49,13 @@ class DataService:
             'ottawa_gloucester': 'Ottawa Gloucester',
             'kanata_bridlewood': 'Kanata Bridlewood',
         }
+
+    def list_user_events(self, user_id):
+        events = self.local_db.booking_event.find({'user_id': ObjectId(user_id)})
+        return events and [BookingEvent(i) for i in events] or []
+
+    def add_events(self, events_list):
+        events_list = [event.to_dict() for event in events_list]
+        result = self.local_db.booking_event.insert_many(events_list)
+        return result
+

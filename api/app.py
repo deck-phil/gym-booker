@@ -3,8 +3,10 @@ from flask_login import LoginManager, current_user
 from flask_bcrypt import Bcrypt
 from data.local_db import DataService
 from api.encryption import SECRET_KEY
+from api.job.job_scheduler import JobScheduler
 
 
+job_scheduler = JobScheduler()
 login_manager = LoginManager()
 data_service = DataService()
 
@@ -32,6 +34,19 @@ def check_valid_login():
             return Response({'Unauthorized'}, status=401, mimetype='application/json')
 
 
+def initialize_jobs():
+    from engine.config import START_JOB
+
+    if not START_JOB:
+        print('CONFIG: START_JOB is False')
+        return False
+    print('Starting Job Scheduler')
+    from api.job.job_create_booking_events import job, JOB_INTERVAL
+
+    job_scheduler.add_job(job, JOB_INTERVAL)# in seconds)
+    job_scheduler.start()
+
+
 from api.handler.login_handler import LoginHandler
 from api.handler.logout_handler import LogoutHandler
 from api.handler.create_user_handler import CreateUserHandler
@@ -50,3 +65,5 @@ rules = [
 
 for rule in rules:
     app.add_url_rule(rule[0], rule[1], rule[2].as_view(rule[1]), methods=rule[3])
+
+initialize_jobs()
